@@ -6,7 +6,7 @@
 
 ### Document Status
 
-Draft v1
+Version 2.0
 
 ---
 
@@ -16,22 +16,22 @@ PlanForge is an AI-powered SDLC decomposition agent that transforms high-level b
 
 Phase 1 evaluates whether an AI workflow can decompose a business Epic into a meaningful set of Features that a Product Manager would consider useful for downstream planning activities.
 
-This phase intentionally focuses on Epic-to-Feature decomposition only.
+This phase focuses exclusively on Epic-to-Feature decomposition.
 
 ---
 
 # 2. Problem Statement
 
-Product Managers often spend significant effort translating business initiatives into structured Features before detailed planning can begin.
+Product Managers frequently spend significant effort translating business initiatives into structured Features before detailed planning can begin.
 
-This activity is:
+This activity is often:
 
 * Manual
 * Time-consuming
 * Inconsistent across teams
 * Dependent on individual experience
 
-The objective of this prototype is to determine whether AI-assisted decomposition can accelerate this process while maintaining acceptable quality.
+The objective of this prototype is to determine whether AI-assisted decomposition can accelerate this process while maintaining acceptable quality, governance, and traceability.
 
 ---
 
@@ -45,33 +45,24 @@ Generate a structured set of Features from a business Epic.
 
 Demonstrate:
 
+* Workflow orchestration
 * Structured AI outputs
 * Validation workflows
 * Human approval checkpoints
-* LangGraph orchestration
-* LangSmith observability
+* Revision workflows
+* Enterprise system integration
+* Knowledge retention and reuse
+* Workflow observability
 
 ---
 
-# 4. Success Criteria
-
-A run is considered successful when:
-
-1. Features are generated successfully.
-2. Output passes schema validation.
-3. Product Manager can review results.
-4. Product Manager rates output quality at 4 out of 5 or higher.
-5. Execution trace is visible in LangSmith.
-
----
-
-# 5. User
+# 4. User
 
 Enterprise Product Manager
 
 ---
 
-# 6. Inputs
+# 5. Inputs
 
 The user provides:
 
@@ -93,7 +84,7 @@ Business outcomes expected from implementation.
 
 ---
 
-# 7. Outputs
+# 6. Outputs
 
 The system generates a list of Features.
 
@@ -104,9 +95,11 @@ Each Feature includes:
 * Business Value
 * Acceptance Criteria
 
+The system maintains version history for all generated Feature sets.
+
 ---
 
-# 8. Feature Definition
+# 7. Feature Definition
 
 A Feature represents a distinct business capability that delivers identifiable business value.
 
@@ -120,20 +113,25 @@ A Feature is not:
 
 ---
 
-# 9. Feature Quality Criteria
+# 8. Feature Quality Criteria
 
 A generated Feature must:
 
 1. Represent a distinct business capability.
+
 2. Deliver identifiable business value.
+
 3. Avoid overlap with other generated Features.
+
 4. Be understandable without implementation knowledge.
+
 5. Be decomposable into User Stories in a future phase.
+
 6. Avoid technical solution design unless explicitly present in the Epic.
 
 ---
 
-# 10. Examples
+# 9. Examples
 
 ## Poor Features
 
@@ -159,6 +157,33 @@ These describe business capabilities and user outcomes.
 
 ---
 
+# 10. Phase 1 Workflow
+
+1. User submits an Epic.
+
+2. System generates Features.
+
+3. System validates generated Features against defined quality criteria.
+
+4. User reviews generated Features.
+
+5. If approved:
+
+   * Publish approved Features to the enterprise documentation repository.
+   * Store approved Epic and Features in a searchable knowledge repository.
+   * Complete workflow.
+
+6. If rejected:
+
+   * Capture reviewer feedback.
+   * Generate revised Features using reviewer feedback.
+   * Maintain version history.
+   * Return to review step.
+
+The workflow continues until the user approves the generated Features or terminates the session.
+
+---
+
 # 11. Functional Requirements
 
 ## FR1
@@ -167,27 +192,51 @@ User can enter Epic information.
 
 ## FR2
 
-System generates Features using GPT.
+System generates Features from an Epic.
 
 ## FR3
 
-Output conforms to the Feature schema.
+Generated output conforms to the Feature schema.
 
 ## FR4
 
-Generated Features are validated.
+System validates generated Features before review.
 
 ## FR5
 
-User can:
-
-* Approve
-* Reject
-* Regenerate
+User can approve generated Features.
 
 ## FR6
 
-Execution traces are captured in LangSmith.
+User can reject generated Features.
+
+## FR7
+
+User can provide reviewer feedback when rejecting generated Features.
+
+## FR8
+
+System generates revised Features using reviewer feedback.
+
+## FR9
+
+System maintains version history for generated Feature sets.
+
+## FR10
+
+Approved Features are published to an enterprise documentation repository.
+
+## FR11
+
+Approved Epics and Features are stored in a searchable knowledge repository.
+
+## FR12
+
+Workflow execution state is managed across the end-to-end process.
+
+## FR13
+
+Workflow execution traces are captured for observability and troubleshooting.
 
 ---
 
@@ -195,59 +244,107 @@ Execution traces are captured in LangSmith.
 
 ## NFR1
 
-Response time less than 30 seconds.
+Response time less than 30 seconds for Feature generation.
 
 ## NFR2
 
-Output must be valid structured JSON.
+Output must conform to the defined schema.
 
 ## NFR3
 
-All workflow stages must be traceable.
+Workflow state must survive approval and revision cycles.
 
 ## NFR4
 
-Workflow must support future decomposition phases.
+All workflow stages must be traceable.
+
+## NFR5
+
+The solution must support future decomposition phases without major redesign.
 
 ---
 
-# 13. Out of Scope
+# 13. Success Criteria
 
-The following capabilities are intentionally excluded from Phase 1:
+A run is considered successful when:
 
-* User Story generation
-* Backlog Item generation
-* Confluence publishing
-* Jira integration
-* Sprint planning
-* Velocity tracking
-* Multi-user collaboration
-* Role-based access control
-* Workflow approvals beyond a single reviewer
+1. Features are generated successfully.
+
+2. Generated Features pass validation.
+
+3. Product Manager can review generated Features.
+
+4. Product Manager can reject generated Features and provide feedback.
+
+5. System generates improved Feature versions using reviewer feedback.
+
+6. Approved Features are published successfully.
+
+7. Approved artifacts are stored successfully.
+
+8. Workflow execution is observable end-to-end.
+
+9. Product Manager rates final Feature quality at 4 out of 5 or higher.
 
 ---
 
 # 14. Evaluation Approach
 
-Three sample Epics will be used for evaluation.
+The prototype will be evaluated using representative enterprise Epics.
 
-For each Epic, the Product Manager will assess:
+Evaluation criteria:
 
-* Completeness
-* Distinctness
+## Feature Quality
+
+* Distinct business capabilities
 * Business value alignment
-* Readiness for Story decomposition
+* Non-overlapping Features
+* Appropriate level of abstraction
+* Readiness for User Story decomposition
 
-Outputs will be scored on a 1 to 5 scale.
+## Workflow Quality
+
+* Successful validation
+* Successful approval workflow
+* Successful regeneration workflow
+* Successful publication workflow
+* Successful artifact storage
+
+## Platform Demonstration
+
+* Workflow orchestration
+* Human approval checkpoints
+* Version management
+* Enterprise integration
+* Workflow observability
 
 ---
 
-# 15. Risks
+# 15. Definition of Improvement
 
-Poor Epic quality may lead to poor Feature quality.
+A revised Feature set is considered improved when reviewer feedback has been addressed and one or more of the following conditions are true:
 
-Feature granularity may vary by domain.
+* Missing business capabilities have been added.
+* Feature overlap has been reduced.
+* Business value alignment has improved.
+* Feature descriptions are clearer.
+* Feature scope is more appropriate.
+* Feature readiness for User Story decomposition has improved.
 
-Validation rules may require iterative tuning.
+---
 
-Generated Features may be technically correct but not useful for planning purposes.
+# 16. Out of Scope
+
+The following capabilities are intentionally excluded from Phase 1:
+
+* User Story generation
+* Backlog Item generation
+* Sprint planning
+* Velocity forecasting
+* Jira integration
+* Multi-user collaboration
+* Role-based access control
+* Multi-reviewer approval workflows
+* Automated prioritization
+* Cost estimation
+* Capacity planning
