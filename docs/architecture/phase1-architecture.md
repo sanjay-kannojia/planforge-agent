@@ -62,6 +62,8 @@ Every generation, review, approval, rejection, and publication action must be tr
 
 The architecture must support future decomposition phases:
 
+
+```text
 Epic
   ↓
 Feature
@@ -69,6 +71,7 @@ Feature
 User Story
   ↓
 Backlog Item
+```
 
 without major redesign.
 
@@ -76,6 +79,7 @@ without major redesign.
 
 # 3. High-Level Architecture
 
+```text
 ┌─────────────────┐
 │    Streamlit    │
 │       UI        │
@@ -127,6 +131,7 @@ without major redesign.
             │
             ▼
      Organizational Store
+```
 
 ---
 
