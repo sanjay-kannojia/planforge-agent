@@ -2,7 +2,7 @@
 
 ## Feature Validation Prompt
 
-**Document Version:** 1.1
+**Document Version:** 1.2
 
 ---
 
@@ -12,7 +12,7 @@ This prompt evaluates the quality of Features generated from a business Epic.
 
 The objective is to determine whether each Feature represents a meaningful business capability and is ready for Product Manager review.
 
-The validator acts as an independent reviewer and identifies weaknesses, overlaps, missing capabilities, and implementation-focused artifacts.
+The validator acts as an independent reviewer and identifies weaknesses, overlaps, missing capabilities, implementation-focused artifacts, and misalignment with business outcomes.
 
 ---
 
@@ -40,6 +40,7 @@ Determine whether the Feature:
 * Is understandable by business stakeholders
 * Can be decomposed into User Stories
 * Is implementation agnostic
+* Aligns with business outcomes
 
 ---
 
@@ -135,6 +136,32 @@ Recommendation Microservice
 
 ---
 
+## Criterion 6: Business Outcome Alignment
+
+### Question
+
+Does the Feature clearly contribute to a business, operational, user, or customer outcome?
+
+### PASS Example
+
+Intelligent Resource Matching
+
+Outcome:
+
+* Reduce staffing effort
+* Improve project fulfillment
+* Increase resource utilization
+
+### FAIL Example
+
+Recommendation Service Layer
+
+Outcome:
+
+* No identifiable business outcome
+
+---
+
 # Feature Set Validation
 
 Evaluate the entire Feature Set.
@@ -146,6 +173,7 @@ Determine whether:
 * Features overlap significantly
 * Feature count is reasonable
 * Features are balanced in scope
+* Features collectively support the Epic objectives
 
 ---
 
@@ -183,6 +211,7 @@ Examples:
 * Missing critical business capability
 * Significant overlap between Features
 * Feature lacks meaningful business value
+* Feature lacks business outcome alignment
 
 ---
 
@@ -251,6 +280,12 @@ Return JSON.
         "status": "PASS | FAIL",
         "severity": "LOW | MEDIUM | HIGH",
         "comments": []
+      },
+
+      "business_outcome_alignment": {
+        "status": "PASS | FAIL",
+        "severity": "LOW | MEDIUM | HIGH",
+        "comments": []
       }
     }
   ],
@@ -281,17 +316,19 @@ Return JSON.
 
 A Feature fails validation if any of the following occur:
 
-* It is primarily a technical implementation
-* It lacks business value
-* It substantially overlaps another Feature
-* It cannot be decomposed into User Stories
+* It is primarily a technical implementation.
+* It lacks business value.
+* It substantially overlaps another Feature.
+* It cannot be decomposed into User Stories.
+* It does not align with a meaningful business outcome.
 
 A Feature Set fails validation if:
 
-* Major business capabilities are missing
-* Significant overlap exists
-* Feature scope is inconsistent
-* Feature count is excessive
+* Major business capabilities are missing.
+* Significant overlap exists.
+* Feature scope is inconsistent.
+* Feature count is excessive.
+* Features do not collectively support the Epic objective.
 
 ---
 
@@ -308,6 +345,7 @@ Explicitly identify:
 * Overlaps
 * Technical implementation leakage
 * Scope problems
+* Missing business outcomes
 
 Provide actionable review comments.
 
@@ -326,5 +364,6 @@ The validator should provide sufficient feedback so that a Product Manager can u
 * Why a Feature passed or failed
 * What quality concerns exist
 * Which Features require review attention
+* Whether the Feature supports a meaningful business outcome
 
 The validator serves as an AI reviewer before human review occurs.
