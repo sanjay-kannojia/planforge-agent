@@ -155,6 +155,7 @@ Regeneration cannot occur without reviewer feedback.
 
 # 10. Workflow
 
+```text
 User submits Epic
         ↓
 Retrieve Similar Artifacts
@@ -176,6 +177,7 @@ All Features Approved?
 Publish
         ↓
 Store Learning Artifacts
+```
 
 Workflow Steps:
 

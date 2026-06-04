@@ -62,7 +62,6 @@ Every generation, review, approval, rejection, and publication action must be tr
 
 The architecture must support future decomposition phases:
 
-
 ```text
 Epic
   ↓
@@ -164,10 +163,6 @@ without major redesign.
 
 * Epic Object
 
-### Milestone
-
-Milestone 1
-
 ---
 
 ## Node 2 - Knowledge Retrieval
@@ -187,10 +182,6 @@ Retrieve historical artifacts to improve generation quality.
 * Similar Rejected Features
 * Associated Reviewer Feedback
 
-### Milestone
-
-Milestone 5
-
 ---
 
 ## Node 3 - Feature Generation
@@ -204,10 +195,6 @@ Milestone 5
 
 * Generated Feature Set
 
-### Milestone
-
-Milestone 1
-
 ---
 
 ## Node 4 - Feature Validation
@@ -219,10 +206,6 @@ Milestone 1
 ### Outputs
 
 * Validated Feature Set
-
-### Milestone
-
-Milestone 2
 
 ---
 
@@ -241,10 +224,6 @@ Milestone 2
 
 * Feedback is mandatory for rejected Features.
 * Approved Features cannot be modified automatically.
-
-### Milestone
-
-Milestone 3
 
 ---
 
@@ -265,10 +244,6 @@ Milestone 3
 * Only rejected Features are regenerated.
 * Approved Features remain unchanged.
 
-### Milestone
-
-Milestone 3
-
 ---
 
 ## Node 7 - Confluence Publisher
@@ -280,10 +255,6 @@ Milestone 3
 ### Outputs
 
 * Published Artifact
-
-### Milestone
-
-Milestone 4
 
 ---
 
@@ -299,10 +270,6 @@ Milestone 4
 ### Outputs
 
 * Stored Artifacts
-
-### Milestone
-
-Milestone 5
 
 ---
 
@@ -388,20 +355,24 @@ Store a maximum of four rejected versions per Feature.
 
 Example:
 
+```text
 Feature C v1 → Rejected
 Feature C v2 → Rejected
 Feature C v3 → Rejected
 Feature C v4 → Rejected
 Feature C v5 → Rejected
 Feature C v6 → Approved
+```
 
 Repository stores:
 
+```text
 v2
 v3
 v4
 v5
 v6 (Approved)
+```
 
 Oldest rejected versions are removed when retention limits are exceeded.
 
@@ -477,6 +448,7 @@ Feature-level versioning is required.
 
 Example:
 
+```text
 Feature A v1 → Approved
 
 Feature B v1 → Approved
@@ -484,6 +456,7 @@ Feature B v1 → Approved
 Feature C v1 → Rejected
 Feature C v2 → Rejected
 Feature C v3 → Approved
+```
 
 Feature Set version history is also maintained.
 
