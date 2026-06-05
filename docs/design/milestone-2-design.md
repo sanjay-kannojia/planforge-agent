@@ -10,7 +10,20 @@
 
 # Document Status
 
-Version 2.0
+# Change Log
+
+## Version 2.1
+
+Changes:
+
+- Removed Improvement Opportunities from evaluation output.
+- Simplified evaluation results to Recommendation and Findings.
+- Clarified Milestone 3 consumption model.
+- Aligned evaluation workflow with human approval and rejection process.
+
+## Version 2.0
+
+Initial Feature Evaluation and Approval Recommendation design.
 
 ---
 
@@ -18,11 +31,11 @@ Version 2.0
 
 Milestone 2 introduces AI-based Feature Evaluation.
 
-The goal is to reduce Product Manager review effort by evaluating generated Features and recommending whether they are likely to be approved.
+The goal is to reduce Product Manager review effort by evaluating generated Features and providing approval recommendations before human review.
 
 The system does not replace Product Manager judgment.
 
-The system acts as an experienced Product Management reviewer and provides recommendations before human review.
+The system acts as an experienced Product Manager reviewer and performs an initial quality assessment of generated Features.
 
 ---
 
@@ -52,18 +65,21 @@ The AI should perform an initial quality review and highlight potential concerns
 * Evaluate generated Features
 * Assess Feature quality
 * Generate approval recommendations
-* Generate review findings
-* Generate rejection reasons
-* Generate regeneration guidance
-* Display evaluation results
+* Generate findings
+* Generate improvement opportunities
+* Display evaluation results in the UI
+* Evaluate Features independently
 
 ## Out of Scope
 
 * Human approval workflow
+* Human rejection workflow
 * Feature regeneration
 * ChromaDB integration
 * Confluence publishing
 * User Story generation
+
+These capabilities will be introduced in future milestones.
 
 ---
 
@@ -92,11 +108,11 @@ The evaluator does not evaluate:
 
 ## 5.1 Business Value
 
-Question:
+### Question
 
 Does the Feature create meaningful business value?
 
-Examples:
+### Examples
 
 Good:
 
@@ -109,7 +125,7 @@ Weak:
 * Administrative activity with unclear value
 * Technical capability without measurable outcome
 
-Priority:
+### Priority
 
 Highest
 
@@ -117,11 +133,11 @@ Highest
 
 ## 5.2 Outcome Alignment
 
-Question:
+### Question
 
 Does the Feature directly contribute to achieving the Epic objective?
 
-Examples:
+### Examples
 
 Epic:
 
@@ -135,7 +151,7 @@ Weak:
 
 User Theme Configuration
 
-Priority:
+### Priority
 
 High
 
@@ -143,11 +159,11 @@ High
 
 ## 5.3 Business Capability
 
-Question:
+### Question
 
 Does the Feature represent a customer-facing or business-user-facing capability?
 
-Examples:
+### Examples
 
 Good:
 
@@ -161,7 +177,7 @@ Weak:
 * Forecast Engine
 * Authentication API
 
-Priority:
+### Priority
 
 High
 
@@ -169,7 +185,7 @@ High
 
 ## 5.4 Scope Appropriateness
 
-Question:
+### Question
 
 Is the Feature appropriately sized?
 
@@ -179,7 +195,7 @@ The Feature should not represent:
 * A User Story
 * A Technical Task
 
-Priority:
+### Priority
 
 Medium
 
@@ -187,11 +203,11 @@ Medium
 
 ## 5.5 Feature Uniqueness
 
-Question:
+### Question
 
 Does the Feature significantly overlap with another generated Feature?
 
-Priority:
+### Priority
 
 Medium
 
@@ -203,10 +219,8 @@ The evaluator generates:
 
 * Recommendation
 * Findings
-* Improvement Opportunities
-* Regeneration Guidance
 
-The evaluator may calculate internal scoring to support consistency.
+The evaluator may calculate internal scores to support consistency.
 
 Internal scores are not displayed to users.
 
@@ -216,7 +230,7 @@ Internal scores are not displayed to users.
 
 ## APPROVE
 
-Feature is likely acceptable for Product Manager review and approval.
+The Feature is likely acceptable for Product Manager approval.
 
 Characteristics:
 
@@ -229,7 +243,7 @@ Characteristics:
 
 ## REVIEW
 
-Feature may require Product Manager attention.
+The Feature may require Product Manager attention.
 
 Characteristics:
 
@@ -237,19 +251,6 @@ Characteristics:
 * Potential overlap
 * Scope uncertainty
 * Business value needs clarification
-
----
-
-## REJECT
-
-Feature is unlikely to be approved.
-
-Characteristics:
-
-* Weak business value
-* Poor Epic alignment
-* Technical implementation focus
-* Significant overlap
 
 ---
 
@@ -265,9 +266,7 @@ Example:
     "Strong business-user-facing capability.",
     "Directly supports staffing outcomes.",
     "Provides measurable business value."
-  ],
-  "improvement_opportunities": [],
-  "regeneration_guidance": []
+  ]
 }
 ```
 
@@ -280,14 +279,6 @@ Review Example:
   "findings": [
     "Appears to be a supporting capability.",
     "Business value is indirect."
-  ],
-  "improvement_opportunities": [
-    "Focus on staffing outcomes.",
-    "Increase customer-facing value."
-  ],
-  "regeneration_guidance": [
-    "Consider Resource Discovery.",
-    "Consider Staffing Recommendation Review."
   ]
 }
 ```
@@ -296,6 +287,7 @@ Review Example:
 
 # 9. Workflow
 
+```text
 Epic
 ↓
 Feature Generation
@@ -305,21 +297,25 @@ Feature Evaluation
 Approval Recommendation
 ↓
 Display Results
+```
 
 ---
 
 # 10. LangGraph Flow
 
-Milestone 1
+## Milestone 1
 
+```text
 Epic Intake
 ↓
 Feature Generation
 ↓
 Display Results
+```
 
-Milestone 2
+## Milestone 2
 
+```text
 Epic Intake
 ↓
 Feature Generation
@@ -327,6 +323,7 @@ Feature Generation
 Feature Evaluation
 ↓
 Display Results
+```
 
 ---
 
@@ -334,17 +331,24 @@ Display Results
 
 For each generated Feature display:
 
-Feature Name
+## Feature Name
 
-AI Recommendation
+## Recommendation
 
-Key Findings
+Examples:
 
-Improvement Opportunities
+* APPROVE
+* REVIEW
 
-Regeneration Guidance
+## Findings
 
-Example:
+Examples:
+
+* Strong business value
+* Strong Epic alignment
+* Appropriate scope
+
+### Example
 
 Feature: Resource Discovery
 
@@ -358,7 +362,9 @@ Findings:
 * Directly supports staffing outcomes
 * Delivers measurable business value
 
-Example:
+---
+
+### Example
 
 Feature: Resource Profile Management
 
@@ -371,48 +377,15 @@ Findings:
 * Appears to be a supporting capability
 * Business value is indirect
 
-Improvement Opportunities:
-
-* Focus on staffing outcomes
-* Increase customer-facing value
-
 ---
 
 # 12. Human Interaction Model
 
 The Product Manager is not expected to score Features.
 
-The Product Manager performs one of two actions:
+The Product Manager reviews AI recommendations and prepares for future approval or rejection workflows.
 
-## Approve
-
-No feedback required.
-
-Stored:
-
-* Feature
-* AI Recommendation
-* Approved Status
-
----
-
-## Reject
-
-Feedback is mandatory.
-
-Examples:
-
-* Business value unclear
-* Too broad
-* Too technical
-* Missing customer impact
-* Overlaps another Feature
-
-Stored:
-
-* Feature
-* AI Recommendation
-* Rejection Feedback
+Human approval and rejection actions are introduced in Milestone 3.
 
 ---
 
@@ -420,43 +393,145 @@ Stored:
 
 Evaluation decisions should be informed by approved decomposition examples stored under:
 
+```text
 sample_epics/
+```
 
 These examples represent approved Product Manager decompositions and serve as reference patterns for quality evaluation.
 
 ---
 
-# 14. Acceptance Criteria
+# 14. Expected Implementation Artifacts
+
+## New Files
+
+```text
+src/
+│
+├── graph/
+│   └── evaluation_node.py
+│
+├── models/
+│   ├── feature_evaluation.py
+│   └── evaluation_result.py
+│
+├── services/
+│   └── feature_evaluation_service.py
+│
+├── prompts/
+│   └── feature_evaluation.py
+```
+
+---
+
+## Updated Files
+
+```text
+app.py
+
+src/
+│
+├── graph/
+│   └── workflow.py
+
+src/
+│
+└── state/
+    └── workflow_state.py
+```
+
+---
+
+## Repository Structure After Milestone 2
+
+```text
+planforge/
+│
+├── app.py
+│
+├── docs/
+│   ├── architecture/
+│   ├── design/
+│   ├── prd/
+│   └── prompts/
+│
+├── sample_epics/
+│
+├── src/
+│   │
+│   ├── graph/
+│   │   ├── workflow.py
+│   │   └── evaluation_node.py
+│   │
+│   ├── models/
+│   │   ├── epic.py
+│   │   ├── feature.py
+│   │   ├── feature_set.py
+│   │   ├── feature_evaluation.py
+│   │   └── evaluation_result.py
+│   │
+│   ├── prompts/
+│   │   ├── feature_generator.py
+│   │   └── feature_evaluation.py
+│   │
+│   ├── services/
+│   │   ├── llm_service.py
+│   │   └── feature_evaluation_service.py
+│   │
+│   └── state/
+│       └── workflow_state.py
+│
+├── tests/
+│
+├── requirements.txt
+│
+└── .env.example
+```
+
+---
+
+# 15. Acceptance Criteria
 
 ## Functional
 
 * Evaluate every generated Feature
-* Produce approval recommendation
+* Produce approval recommendations
 * Generate findings
-* Generate improvement opportunities
-* Generate regeneration guidance
+* Display evaluation results in the UI
 
 ## User Experience
 
-* Recommendations visible in Streamlit
+* Recommendations visible in Streamlit UI
 * Findings easy to understand
 * Weak Features easy to identify
-* Human approval effort reduced
+* Product Manager review effort reduced
 
 ---
 
-# 15. Future Integration
+# 16. Explicitly Out of Scope
+
+Do NOT implement:
+
+* Human Approval Workflow
+* Human Rejection Workflow
+* Feature Regeneration
+* ChromaDB Integration
+* Confluence Publishing
+* User Story Generation
+
+These capabilities belong to future milestones.
+
+---
+
+# 17. Future Integration
 
 ## Milestone 3
 
 Consumes:
 
-* Recommendation
+* Evaluation Recommendations
 * Findings
-* Regeneration Guidance
 * Human Rejection Feedback
-
----
 
 ## Milestone 4
 
@@ -467,8 +542,6 @@ Stores:
 * AI Recommendations
 * Human Feedback
 * Regeneration History
-
----
 
 ## Milestone 5
 
