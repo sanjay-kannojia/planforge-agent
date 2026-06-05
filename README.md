@@ -1,6 +1,6 @@
 # PlanForge
 
-AI-powered Product Management agent that transforms business Epics into high-quality business Features using structured prompts, LangGraph workflows, and human-in-the-loop review.
+AI-powered Product Management agent that transforms business Epics into high-quality business Features using structured prompts, LangGraph workflows, AI-based evaluation, and human approval.
 
 ---
 
@@ -11,7 +11,8 @@ PlanForge helps Product Managers accelerate the planning process by converting b
 The long-term vision is to create an AI-assisted planning platform that:
 
 * Generates Features from Epics
-* Validates Feature quality
+* Evaluates Feature quality
+* Recommends approval actions
 * Supports human review and approval
 * Learns from feedback over time
 * Publishes approved artifacts to Confluence
@@ -35,17 +36,17 @@ PlanForge aims to provide a repeatable, explainable, and AI-assisted planning wo
 
 # Current Status
 
-## Phase 1: Epic to Feature
+## Phase 1: Epic to Feature Decomposition
 
 ### Milestone Status
 
-| Milestone                                        | Status     |
-| ------------------------------------------------ | ---------- |
-| Milestone 1 - Feature Generation                 | ✅ Complete |
-| Milestone 2 - Feature Validation                 | ⬜ Planned  |
-| Milestone 3 - Human Review & Regeneration        | ⬜ Planned  |
-| Milestone 4 - Organizational Learning (ChromaDB) | ⬜ Planned  |
-| Milestone 5 - Confluence Publishing              | ⬜ Planned  |
+| Milestone                                        | Status      |
+| ------------------------------------------------ | ----------- |
+| Milestone 1 - Feature Generation                 | ✅ Complete  |
+| Milestone 2 - Feature Evaluation                 | ⬜ In Design |
+| Milestone 3 - Human Review & Regeneration        | ⬜ Planned   |
+| Milestone 4 - Organizational Learning (ChromaDB) | ⬜ Planned   |
+| Milestone 5 - Confluence Publishing              | ⬜ Planned   |
 
 Current Version:
 
@@ -61,12 +62,13 @@ PlanForge currently supports:
 
 * Epic data capture
 * AI-powered Feature generation
-* Structured JSON output
+* Structured prompt engineering
+* JSON-based Feature output
 * Pydantic schema validation
 * LangGraph workflow orchestration
 * Streamlit user interface
 
-Example flow:
+Current workflow:
 
 ```text
 Epic
@@ -75,7 +77,7 @@ LangGraph Workflow
   ↓
 OpenAI Feature Generation
   ↓
-Pydantic Validation
+Pydantic Schema Validation
   ↓
 Feature Display
 ```
@@ -84,19 +86,22 @@ Feature Display
 
 # Design Principles
 
-## Customer-Facing Features
+## Business Value First
 
-PlanForge prioritizes generation of customer-facing or business-user-facing Features.
+A Feature should deliver meaningful business value.
 
-Example:
+Business value is more important than implementation details.
 
-### Good
+Examples:
+
+### Strong Business Value
 
 * Resource Discovery
 * Intelligent Resource Matching
 * Forecast Approval and Review
+* Security Compliance Monitoring
 
-### Poor
+### Weak Business Value
 
 * Resource Database
 * Matching Engine
@@ -104,9 +109,29 @@ Example:
 
 ---
 
+## Customer-Facing or Business-User-Facing
+
+Generated Features should represent capabilities recognized by customers or business users.
+
+Good:
+
+* Resource Discovery
+* Staffing Recommendation Review
+* Regional Privacy Compliance Management
+
+Poor:
+
+* Resource Service
+* Recommendation API
+* Compliance Database
+
+---
+
 ## Business Outcome Alignment
 
-Every generated Feature should contribute directly to the business outcome defined in the Epic.
+Every generated Feature should contribute directly to achieving the Epic objective.
+
+Features that do not contribute to the desired business outcome should not be recommended.
 
 ---
 
@@ -114,18 +139,20 @@ Every generated Feature should contribute directly to the business outcome defin
 
 AI generates recommendations.
 
-Humans remain responsible for approval and final decisions.
+Humans make approval decisions.
+
+PlanForge is designed to reduce Product Manager effort, not replace Product Manager judgment.
 
 ---
 
 # Technology Stack
 
 | Component              | Technology    |
-| ---------------------- | ------------- |
+|------------------------|---------------|
 | UI                     | Streamlit     |
 | Workflow Engine        | LangGraph     |
 | LLM                    | OpenAI        |
-| Validation             | Pydantic      |
+| Schema Validation      | Pydantic      |
 | Environment Management | Python Dotenv |
 | Language               | Python        |
 
@@ -133,6 +160,7 @@ Planned:
 
 | Component                | Technology     |
 | ------------------------ | -------------- |
+| Feature Evaluation       | OpenAI         |
 | Vector Database          | ChromaDB       |
 | Documentation Publishing | Confluence API |
 | Observability            | LangSmith      |
@@ -151,6 +179,8 @@ planforge/
 │   ├── design/
 │   ├── prd/
 │   └── prompts/
+│
+├── sample_epics/
 │
 ├── src/
 │   ├── graph/
@@ -193,19 +223,34 @@ Provide intelligent recommendations for matching resources to projects.
 
 ---
 
+# Sample Epics
+
+PlanForge includes approved Epic-to-Feature decomposition examples under:
+
+```text
+sample_epics/
+```
+
+These examples represent Product Manager-approved decompositions and serve as reference patterns for future evaluation and organizational learning.
+
+---
+
 # Roadmap
 
 ## Milestone 2
 
-Feature Validation Workflow
+Feature Evaluation and Approval Recommendation
 
 Capabilities:
 
-* AI-based Feature review
-* Business capability validation
-* Business value validation
-* Outcome alignment validation
+* AI-based Feature evaluation
+* Business value assessment
+* Outcome alignment assessment
+* Business capability assessment
 * Feature overlap detection
+* Approval recommendation generation
+* Improvement opportunity identification
+* Regeneration guidance generation
 
 ---
 
@@ -217,8 +262,9 @@ Capabilities:
 
 * Feature approval workflow
 * Feature rejection workflow
-* Feedback capture
+* Mandatory rejection feedback
 * Targeted Feature regeneration
+* Feature version management
 
 ---
 
@@ -231,6 +277,7 @@ Capabilities:
 * ChromaDB integration
 * Approved Feature storage
 * Rejected Feature storage
+* Rejection feedback storage
 * Similarity-based retrieval
 * Feedback-informed generation
 
