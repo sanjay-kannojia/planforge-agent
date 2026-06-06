@@ -2,7 +2,7 @@
 
 ## Feature Validation Prompt
 
-**Document Version:** 1.2
+**Document Version:** 1.3
 
 ---
 
@@ -159,6 +159,54 @@ Recommendation Service Layer
 Outcome:
 
 * No identifiable business outcome
+
+---
+
+## Criterion 7: Feature Identity and Overlap Review
+
+Evaluate whether each Feature has its own distinct identity.
+
+A Feature should not be approved if it is mostly a supporting behavior inside another Feature.
+
+Flag potential overlap when:
+
+- One Feature depends on another Feature to make sense
+- One Feature is mostly an explanation, view, report, or action inside another Feature
+- Two Features would likely be implemented as the same user workflow
+- A business user would not describe them as separate capabilities
+
+### Example
+
+Potential overlap:
+
+- Staffing Recommendation Review
+- Match Explainability
+
+Reason:
+
+Explainability may be part of the recommendation review workflow rather than a separate Feature.
+
+Finding:
+
+"Match Explainability may overlap with Staffing Recommendation Review because explanation is needed during review. Consider combining or clarifying the distinct business identity."
+
+---
+
+## Criterion 8: Filler Feature Detection
+
+Flag a Feature as REVIEW if it appears to exist mainly to reach a target Feature count.
+
+A filler Feature may have these signs:
+
+- Narrow business value
+- Indirect Epic alignment
+- Mostly supports another Feature
+- Could naturally be acceptance criteria inside another Feature
+- Does not stand alone as a business capability
+
+Finding example:
+
+"This Feature appears to be a supporting activity rather than a standalone business capability. It may be better merged into another Feature."
 
 ---
 

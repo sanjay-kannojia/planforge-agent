@@ -193,6 +193,57 @@ Better Features:
 
 ---
 
+## Rule 6 - Feature Identity Rule
+
+Each Feature must have its own distinct business identity.
+
+A Feature should represent a standalone business capability that can be understood independently.
+
+Do not create a separate Feature for a supporting behavior that naturally belongs inside another Feature.
+
+Before finalizing the Feature Set, check whether any Feature is actually a sub-capability of another Feature.
+
+### Bad Example
+
+- Staffing Recommendation Review
+- Match Explainability
+
+Reason:
+
+Match explainability is likely needed inside the recommendation review experience and may not have enough independent identity as a separate Feature.
+
+### Better Example
+
+- Staffing Recommendation Review and Explainability
+
+Reason:
+
+The review experience includes the ability to understand, accept, reject, or adjust recommendations.
+
+### Feature Identity Test
+
+Ask:
+
+> Can this Feature stand on its own as a meaningful business capability?
+
+If no, merge it into the parent Feature.
+
+---
+
+## Rule 7 - No Filler Feature Rule
+
+Do not generate a Feature only to satisfy a count target.
+
+A weak Feature should be omitted if it does not have enough independent business value.
+
+Before returning the Feature Set, ask:
+
+> Would this Feature still be valuable if it were reviewed independently by a Product Manager?
+
+If no, remove it or merge it into the most relevant Feature.
+
+---
+
 # Feature Quality Checklist
 
 Before generating a Feature, verify:
@@ -211,7 +262,21 @@ Before generating a Feature, verify:
 
 # Output Requirements
 
-Generate exactly 5 Features.
+Generate the number of Features needed to fully decompose the Epic.
+
+Guidance:
+
+- Minimum: 2 Features
+- Preferred range: 2 to 5 Features
+- Maximum: 6 Features
+
+Do not force the Feature Set to contain 5 Features.
+
+If the Epic can be cleanly decomposed into 4 strong Features, return 4 Features.
+
+Do not create filler Features just to reach a target count.
+
+Every Feature must have its own distinct business identity.
 
 Each Feature must contain:
 
