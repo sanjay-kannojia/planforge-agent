@@ -40,18 +40,18 @@ PlanForge aims to provide a repeatable, explainable, and AI-assisted planning wo
 
 ### Milestone Status
 
-| Milestone                                        | Status      |
-| ------------------------------------------------ | ----------- |
-| Milestone 1 - Feature Generation                 | ✅ Complete  |
-| Milestone 2 - Feature Evaluation                 | ⬜ In Design |
-| Milestone 3 - Human Review & Regeneration        | ⬜ Planned   |
-| Milestone 4 - Organizational Learning (ChromaDB) | ⬜ Planned   |
-| Milestone 5 - Confluence Publishing              | ⬜ Planned   |
+| Milestone                                        | Status     |
+| ------------------------------------------------ | ---------- |
+| Milestone 1 - Feature Generation                 | ✅ Complete |
+| Milestone 2 - Feature Evaluation                 | ✅ Complete |
+| Milestone 3 - Human Review & Regeneration        | ⬜ Planned  |
+| Milestone 4 - Organizational Learning (ChromaDB) | ⬜ Planned  |
+| Milestone 5 - Confluence Publishing              | ⬜ Planned  |
 
 Current Version:
 
 ```text
-v0.1.0
+v0.2.0
 ```
 
 ---
@@ -66,6 +66,9 @@ PlanForge currently supports:
 * JSON-based Feature output
 * Pydantic schema validation
 * LangGraph workflow orchestration
+* AI-based Feature evaluation
+* Approval recommendation generation
+* Evaluation findings generation
 * Streamlit user interface
 
 Current workflow:
@@ -75,9 +78,13 @@ Epic
   ↓
 LangGraph Workflow
   ↓
-OpenAI Feature Generation
+OpenAI Feature Set Generation
   ↓
 Pydantic Schema Validation
+  ↓
+OpenAI Feature Set Evaluation
+  ↓
+Approval Recommendation + Findings
   ↓
 Feature Display
 ```
@@ -127,6 +134,16 @@ Poor:
 
 ---
 
+## Feature Identity
+
+Each Feature should have its own distinct business identity.
+
+A Feature should be independently understandable, independently valuable, and independently decomposable into User Stories.
+
+PlanForge avoids generating filler Features simply to reach a fixed count.
+
+---
+
 ## Business Outcome Alignment
 
 Every generated Feature should contribute directly to achieving the Epic objective.
@@ -137,7 +154,7 @@ Features that do not contribute to the desired business outcome should not be re
 
 ## Human-in-the-Loop
 
-AI generates recommendations.
+AI generates and evaluates recommendations.
 
 Humans make approval decisions.
 
@@ -148,7 +165,7 @@ PlanForge is designed to reduce Product Manager effort, not replace Product Mana
 # Technology Stack
 
 | Component              | Technology    |
-|------------------------|---------------|
+| ---------------------- | ------------- |
 | UI                     | Streamlit     |
 | Workflow Engine        | LangGraph     |
 | LLM                    | OpenAI        |
@@ -160,7 +177,6 @@ Planned:
 
 | Component                | Technology     |
 | ------------------------ | -------------- |
-| Feature Evaluation       | OpenAI         |
 | Vector Database          | ChromaDB       |
 | Documentation Publishing | Confluence API |
 | Observability            | LangSmith      |
@@ -212,14 +228,35 @@ Provide intelligent recommendations for matching resources to projects.
 
 * Reduce staffing effort by 30%
 * Increase project fulfillment accuracy by 20%
+* Improve resource manager confidence in staffing recommendations
 
 ### Example Features Generated
 
 * Resource Discovery
 * Intelligent Resource Matching
-* Staffing Recommendation Review
-* Match Explainability
+* Staffing Recommendation Review and Adjustment
 * Staffing Performance Analytics
+
+### Example Evaluation Output
+
+For each generated Feature, PlanForge provides:
+
+* Evaluation Recommendation
+* Findings
+
+Example:
+
+```text
+Feature: Intelligent Resource Matching
+
+Evaluation Recommendation:
+APPROVE
+
+Findings:
+- Strong business-user-facing capability
+- Directly supports the Epic objective
+- Delivers measurable business value
+```
 
 ---
 
@@ -236,23 +273,6 @@ These examples represent Product Manager-approved decompositions and serve as re
 ---
 
 # Roadmap
-
-## Milestone 2
-
-Feature Evaluation and Approval Recommendation
-
-Capabilities:
-
-* AI-based Feature evaluation
-* Business value assessment
-* Outcome alignment assessment
-* Business capability assessment
-* Feature overlap detection
-* Approval recommendation generation
-* Improvement opportunity identification
-* Regeneration guidance generation
-
----
 
 ## Milestone 3
 
