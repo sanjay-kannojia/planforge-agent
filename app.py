@@ -64,8 +64,15 @@ if submitted:
                 st.error(f"Feature generation failed: {exc}")
             else:
                 st.session_state["feature_set"] = result["feature_set"]
+                st.session_state["evaluation_result"] = result["evaluation_result"]
 
 feature_set = st.session_state.get("feature_set")
+evaluation_result = st.session_state.get("evaluation_result")
+evaluations_by_feature = {}
+if evaluation_result:
+    evaluations_by_feature = {
+        evaluation.feature_name: evaluation for evaluation in evaluation_result.evaluations
+    }
 
 if feature_set:
     st.subheader("Generated Features")
@@ -77,5 +84,17 @@ if feature_set:
             st.markdown("**Acceptance Criteria**")
             for criterion in feature.acceptance_criteria:
                 st.markdown(f"- {criterion}")
+
+            evaluation = evaluations_by_feature.get(feature.name)
+            if evaluation:
+                st.markdown("**Evaluation Recommendation**")
+                if evaluation.recommendation == "APPROVE":
+                    st.success(evaluation.recommendation)
+                else:
+                    st.warning(evaluation.recommendation)
+
+                st.markdown("**Findings**")
+                for finding in evaluation.findings:
+                    st.markdown(f"- {finding}")
 else:
     st.info("Enter an Epic and generate Features to begin.")
