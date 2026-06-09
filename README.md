@@ -1,6 +1,6 @@
 # PlanForge
 
-AI-powered Product Management agent that transforms business Epics into high-quality business Features using structured prompts, LangGraph workflows, AI-based evaluation, and human approval.
+AI-powered Product Management agent that transforms business Epics into high-quality business Features using structured prompts, LangGraph workflows, AI-based evaluation, human review, and targeted regeneration.
 
 ---
 
@@ -14,6 +14,7 @@ The long-term vision is to create an AI-assisted planning platform that:
 * Evaluates Feature quality
 * Recommends approval actions
 * Supports human review and approval
+* Regenerates rejected Features using human feedback
 * Learns from feedback over time
 * Publishes approved artifacts to Confluence
 
@@ -30,7 +31,7 @@ This process is often:
 * Dependent on individual experience
 * Difficult to scale across teams
 
-PlanForge aims to provide a repeatable, explainable, and AI-assisted planning workflow.
+PlanForge aims to provide a repeatable, explainable, and AI-assisted planning workflow that reduces manual effort while preserving Product Manager judgment.
 
 ---
 
@@ -44,14 +45,14 @@ PlanForge aims to provide a repeatable, explainable, and AI-assisted planning wo
 | ------------------------------------------------ | ---------- |
 | Milestone 1 - Feature Generation                 | ✅ Complete |
 | Milestone 2 - Feature Evaluation                 | ✅ Complete |
-| Milestone 3 - Human Review & Regeneration        | ⬜ Planned  |
+| Milestone 3 - Human Review & Regeneration        | ✅ Complete |
 | Milestone 4 - Organizational Learning (ChromaDB) | ⬜ Planned  |
 | Milestone 5 - Confluence Publishing              | ⬜ Planned  |
 
 Current Version:
 
 ```text
-v0.2.0
+v0.3.0
 ```
 
 ---
@@ -61,7 +62,7 @@ v0.2.0
 PlanForge currently supports:
 
 * Epic data capture
-* AI-powered Feature generation
+* AI-powered Feature Set generation
 * Structured prompt engineering
 * JSON-based Feature output
 * Pydantic schema validation
@@ -69,6 +70,12 @@ PlanForge currently supports:
 * AI-based Feature evaluation
 * Approval recommendation generation
 * Evaluation findings generation
+* Human review at the Feature level
+* Feature approval
+* Feature rejection with mandatory feedback
+* Targeted regeneration of rejected Features
+* Preservation of approved Features
+* Feature version tracking during the current session
 * Streamlit user interface
 
 Current workflow:
@@ -86,7 +93,13 @@ OpenAI Feature Set Evaluation
   ↓
 Approval Recommendation + Findings
   ↓
-Feature Display
+Human Feature Review
+  ↓
+Approve or Reject
+  ↓
+Regenerate Rejected Features Only
+  ↓
+Re-evaluate Regenerated Features
 ```
 
 ---
@@ -144,21 +157,33 @@ PlanForge avoids generating filler Features simply to reach a fixed count.
 
 ---
 
-## Business Outcome Alignment
+## Human Judgment Is Final
 
-Every generated Feature should contribute directly to achieving the Epic objective.
+AI evaluates and recommends.
 
-Features that do not contribute to the desired business outcome should not be recommended.
+Humans approve or reject.
+
+PlanForge is designed to reduce Product Manager effort, not replace Product Manager judgment.
 
 ---
 
-## Human-in-the-Loop
+## Rejection Requires Feedback
 
-AI generates and evaluates recommendations.
+Approved Features do not require feedback.
 
-Humans make approval decisions.
+Rejected Features require human feedback before regeneration.
 
-PlanForge is designed to reduce Product Manager effort, not replace Product Manager judgment.
+Human feedback is the primary input for targeted regeneration.
+
+---
+
+## Preserve Approved Work
+
+Approved Features remain unchanged during regeneration.
+
+Only rejected Features are regenerated.
+
+This allows Product Managers to improve weak Features without losing already-approved work.
 
 ---
 
@@ -237,7 +262,9 @@ Provide intelligent recommendations for matching resources to projects.
 * Staffing Recommendation Review and Adjustment
 * Staffing Performance Analytics
 
-### Example Evaluation Output
+---
+
+# Example Evaluation Output
 
 For each generated Feature, PlanForge provides:
 
@@ -260,6 +287,27 @@ Findings:
 
 ---
 
+# Example Human Review Flow
+
+```text
+Feature: Resource Manager Confidence Assessment
+
+AI Recommendation:
+REVIEW
+
+Human Decision:
+Reject
+
+Human Feedback:
+This is not a standalone Feature. It feels like a metric or supporting activity inside Staffing Recommendation Review.
+
+PlanForge:
+Regenerates only this rejected Feature.
+Approved Features remain unchanged.
+```
+
+---
+
 # Sample Epics
 
 PlanForge includes approved Epic-to-Feature decomposition examples under:
@@ -273,20 +321,6 @@ These examples represent Product Manager-approved decompositions and serve as re
 ---
 
 # Roadmap
-
-## Milestone 3
-
-Human Review and Regeneration
-
-Capabilities:
-
-* Feature approval workflow
-* Feature rejection workflow
-* Mandatory rejection feedback
-* Targeted Feature regeneration
-* Feature version management
-
----
 
 ## Milestone 4
 

@@ -202,4 +202,4 @@ When implementing a milestone:
 
 Current Implementation Target:
 
-Milestone 2 - Feature Evaluation and Approval Recommendation
+Milestone 3 - Enable human review, approval, rejection, and targeted Feature regeneration.
