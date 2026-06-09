@@ -124,13 +124,27 @@ Evaluate generated Features and provide approval recommendations prior to human 
 
 Enable human review, approval, rejection, and targeted Feature regeneration.
 
-### Planned Capabilities
+### Source Documents
 
-* Feature Approval
-* Feature Rejection
-* Mandatory Rejection Feedback
-* Targeted Feature Regeneration
-* Feature Version Tracking
+#### Business Requirements
+
+- docs/prd/epic-to-feature-prd.md
+
+#### Architecture
+
+- docs/architecture/phase1-architecture.md
+
+#### Design
+
+- docs/design/milestone-3-design.md
+
+#### Prompts
+
+- docs/prompts/feature-regeneration-prompt.md
+
+#### Reference Examples
+
+- sample_epics/
 
 ---
 
