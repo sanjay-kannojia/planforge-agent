@@ -118,7 +118,7 @@ Evaluate generated Features and provide approval recommendations prior to human 
 
 ### Status
 
-🚧 Next
+✅ Complete
 
 ### Objective
 
@@ -152,20 +152,41 @@ Enable human review, approval, rejection, and targeted Feature regeneration.
 
 ### Status
 
-🔮 Future
+🚧 Next
 
 ### Objective
 
 Introduce organizational learning and retrieval using ChromaDB.
 
-### Planned Capabilities
+### Source Documents
 
-* ChromaDB Integration
-* Approved Feature Storage
-* Rejected Feature Storage
-* Human Feedback Storage
-* Similarity-Based Retrieval
-* Feedback-Informed Generation
+#### Business Requirements
+
+- docs/prd/epic-to-feature-prd.md
+
+#### Architecture
+
+- docs/architecture/phase1-architecture.md
+
+#### Design
+
+- docs/design/milestone-4-design.md
+
+#### Reference Examples
+
+- sample_epics/
+
+### Implementation Rules
+
+- Preserve all Milestone 1, 2, and 3 functionality.
+- Use ChromaDB as the local semantic retrieval layer.
+- Store completed approved Epic Decomposition Artifacts only after the full Feature Set is approved.
+- Store rejected Feature lessons from completed sessions with human feedback.
+- Use LangGraph/workflow state for active review history.
+- Do not use ChromaDB as active workflow state.
+- Do not implement Confluence publishing.
+- Do not implement persistent relational database storage.
+- Do not implement User Story generation.
 
 ---
 
@@ -202,4 +223,4 @@ When implementing a milestone:
 
 Current Implementation Target:
 
-Milestone 3 - Enable human review, approval, rejection, and targeted Feature regeneration.
+Milestone 4 - Introduce organizational learning and retrieval using ChromaDB.
