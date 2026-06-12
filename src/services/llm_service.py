@@ -6,6 +6,7 @@ from pydantic import ValidationError
 
 from src.models.epic import Epic
 from src.models.feature_set import FeatureSet
+from src.models.retrieval_context import RetrievalContext
 from src.prompts.feature_generator import build_feature_generation_prompt
 
 
@@ -16,11 +17,18 @@ class OpenAIService:
         self.temperature = self._required_float_env("OPENAI_TEMPERATURE")
         self.client = OpenAI(api_key=self.api_key)
 
-    def generate_features(self, epic: Epic) -> FeatureSet:
+    def generate_features(
+        self,
+        epic: Epic,
+        learning_context: RetrievalContext | None = None,
+    ) -> FeatureSet:
         response = self.client.chat.completions.create(
             model=self.model,
             messages=[
-                {"role": "user", "content": build_feature_generation_prompt(epic)},
+                {
+                    "role": "user",
+                    "content": build_feature_generation_prompt(epic, learning_context),
+                },
             ],
             response_format={"type": "json_object"},
             temperature=self.temperature,

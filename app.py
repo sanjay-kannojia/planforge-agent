@@ -3,9 +3,11 @@ import os
 import streamlit as st
 from dotenv import load_dotenv
 
-from src.graph.workflow import run_regeneration_workflow, run_workflow
+from src.graph.workflow import run_regeneration_workflow, run_workflow, store_learning_artifact
 from src.models.epic import Epic
 from src.models.feature_review import FeatureReview
+from src.models.learning_artifact import FeatureReviewHistoryEntry
+from src.models.retrieval_context import RetrievalContext
 
 
 load_dotenv()
@@ -37,6 +39,37 @@ def set_review_status(index: int, status: str, feedback: str = "") -> None:
             review.locked = status == "Approved"
             break
     st.session_state["feature_reviews"] = reviews
+    append_review_history(index=index, status=status, feedback=feedback)
+    st.session_state["learning_stored"] = False
+
+
+def append_review_history(index: int, status: str, feedback: str = "") -> None:
+    feature_set = st.session_state.get("feature_set")
+    evaluation_result = st.session_state.get("evaluation_result")
+    if feature_set is None:
+        return
+
+    feature = feature_set.features[index]
+    evaluations_by_name = {}
+    if evaluation_result:
+        evaluations_by_name = {
+            evaluation.feature_name: evaluation for evaluation in evaluation_result.evaluations
+        }
+    evaluation = evaluations_by_name.get(feature.name)
+    history = st.session_state.get("review_history", [])
+    history.append(
+        FeatureReviewHistoryEntry(
+            feature_index=index,
+            feature_name=feature.name,
+            feature_version=feature.version,
+            status=status,
+            feedback=feedback,
+            ai_findings=evaluation.findings if evaluation else [],
+            revision_summary=feature.revision_summary,
+            feature_snapshot=feature.model_copy(deep=True),
+        )
+    )
+    st.session_state["review_history"] = history
 
 
 def rejected_reviews_missing_feedback() -> list[FeatureReview]:
@@ -53,6 +86,44 @@ def rejected_reviews_ready_for_regeneration() -> list[FeatureReview]:
         for review in st.session_state.get("feature_reviews", [])
         if review.status == "Rejected" and review.feedback.strip()
     ]
+
+
+def all_features_approved() -> bool:
+    reviews = st.session_state.get("feature_reviews", [])
+    return bool(reviews) and all(review.status == "Approved" for review in reviews)
+
+
+def render_learning_context_summary(
+    context: RetrievalContext | None,
+    title: str = "Retrieved Learning Context",
+) -> None:
+    if context is None:
+        return
+
+    st.subheader(title)
+    artifact_count = len(context.similar_artifacts)
+    lesson_count = len(context.rejected_lessons)
+    st.caption(
+        f"{artifact_count} similar approved decomposition artifact(s) and "
+        f"{lesson_count} rejected Feature lesson(s) found."
+    )
+    for artifact in context.similar_artifacts:
+        with st.expander(f"Similar Epic: {artifact.epic_title}", expanded=False):
+            st.markdown("**Pattern**")
+            for feature_name in artifact.final_feature_names:
+                st.markdown(f"- {feature_name}")
+            if artifact.rejected_lessons:
+                st.markdown("**Rejected Lessons**")
+                for lesson in artifact.rejected_lessons:
+                    st.markdown(
+                        f"- {lesson.original_feature_name}: {lesson.human_feedback}"
+                    )
+    if context.rejected_lessons:
+        with st.expander("Relevant Rejected Feature Lessons", expanded=False):
+            for lesson in context.rejected_lessons:
+                st.markdown(
+                    f"- {lesson.original_feature_name}: {lesson.human_feedback}"
+                )
 
 with st.sidebar:
     st.header("Configuration")
@@ -105,6 +176,10 @@ if submitted:
                 st.session_state["epic"] = epic
                 st.session_state["feature_set"] = result["feature_set"]
                 st.session_state["evaluation_result"] = result["evaluation_result"]
+                st.session_state["learning_context"] = result.get("learning_context")
+                st.session_state["regeneration_learning_context"] = None
+                st.session_state["review_history"] = []
+                st.session_state["learning_stored"] = False
                 st.session_state["feature_reviews"] = initialize_feature_reviews(
                     len(result["feature_set"].features)
                 )
@@ -120,6 +195,11 @@ if evaluation_result:
     }
 
 if feature_set:
+    render_learning_context_summary(st.session_state.get("learning_context"))
+    render_learning_context_summary(
+        st.session_state.get("regeneration_learning_context"),
+        "Retrieved Regeneration Learning Context",
+    )
     st.subheader("Generated Features")
 
     for index, feature in enumerate(feature_set.features, start=1):
@@ -205,6 +285,7 @@ if feature_set:
                         feature_set=st.session_state["feature_set"],
                         evaluation_result=st.session_state["evaluation_result"],
                         feature_reviews=st.session_state["feature_reviews"],
+                        review_history=st.session_state.get("review_history", []),
                     )
                 except Exception as exc:
                     st.error(f"Feature regeneration failed: {exc}")
@@ -212,6 +293,34 @@ if feature_set:
                     st.session_state["feature_set"] = result["feature_set"]
                     st.session_state["evaluation_result"] = result["evaluation_result"]
                     st.session_state["feature_reviews"] = result["feature_reviews"]
+                    st.session_state["review_history"] = result.get("review_history", [])
+                    st.session_state["regeneration_learning_context"] = result.get(
+                        "regeneration_learning_context"
+                    )
                     st.rerun()
+
+        if all_features_approved():
+            if st.session_state.get("learning_stored"):
+                st.success("Completed approved Feature Set has been stored for future learning.")
+            elif st.button("Complete Review and Store Learning Artifact", type="primary"):
+                with st.spinner("Storing completed learning artifact..."):
+                    try:
+                        result = store_learning_artifact(
+                            epic=st.session_state["epic"],
+                            feature_set=st.session_state["feature_set"],
+                            evaluation_result=st.session_state["evaluation_result"],
+                            feature_reviews=st.session_state["feature_reviews"],
+                            review_history=st.session_state.get("review_history", []),
+                        )
+                    except Exception as exc:
+                        st.error(f"Learning artifact storage failed: {exc}")
+                    else:
+                        st.session_state["stored_learning_artifact"] = result[
+                            "stored_learning_artifact"
+                        ]
+                        st.session_state["learning_stored"] = True
+                        st.success(
+                            "Stored completed Epic Decomposition Artifact in ChromaDB."
+                        )
 else:
     st.info("Enter an Epic and generate Features to begin.")

@@ -1,6 +1,6 @@
 # PlanForge
 
-AI-powered Product Management agent that transforms business Epics into high-quality business Features using structured prompts, LangGraph workflows, AI-based evaluation, human review, and targeted regeneration.
+AI-powered Product Management agent that transforms business Epics into high-quality business Features using structured prompts, LangGraph workflows, AI-based evaluation, human review, targeted regeneration, and organizational learning.
 
 ---
 
@@ -15,7 +15,8 @@ The long-term vision is to create an AI-assisted planning platform that:
 * Recommends approval actions
 * Supports human review and approval
 * Regenerates rejected Features using human feedback
-* Learns from feedback over time
+* Learns from approved decomposition patterns
+* Retrieves similar prior Epic decompositions
 * Publishes approved artifacts to Confluence
 
 ---
@@ -46,13 +47,13 @@ PlanForge aims to provide a repeatable, explainable, and AI-assisted planning wo
 | Milestone 1 - Feature Generation                 | ✅ Complete |
 | Milestone 2 - Feature Evaluation                 | ✅ Complete |
 | Milestone 3 - Human Review & Regeneration        | ✅ Complete |
-| Milestone 4 - Organizational Learning (ChromaDB) | ⬜ Planned  |
+| Milestone 4 - Organizational Learning (ChromaDB) | ✅ Complete |
 | Milestone 5 - Confluence Publishing              | ⬜ Planned  |
 
 Current Version:
 
 ```text
-v0.3.0
+v0.4.0
 ```
 
 ---
@@ -76,14 +77,20 @@ PlanForge currently supports:
 * Targeted regeneration of rejected Features
 * Preservation of approved Features
 * Feature version tracking during the current session
+* ChromaDB-based organizational learning
+* Similar Epic decomposition retrieval
+* Rejected Feature lesson storage
+* Retrieved learning context display
 * Streamlit user interface
 
-Current workflow:
+---
+
+# Current Workflow
 
 ```text
 Epic
   ↓
-LangGraph Workflow
+Retrieve Similar Epic Decomposition Patterns
   ↓
 OpenAI Feature Set Generation
   ↓
@@ -100,6 +107,10 @@ Approve or Reject
 Regenerate Rejected Features Only
   ↓
 Re-evaluate Regenerated Features
+  ↓
+When All Features Are Approved
+  ↓
+Store Completed Learning Artifact in ChromaDB
 ```
 
 ---
@@ -187,6 +198,16 @@ This allows Product Managers to improve weak Features without losing already-app
 
 ---
 
+## Learn From Completed Outcomes
+
+PlanForge stores organizational learning only after the full Feature Set reaches approval.
+
+Active review history remains in workflow/session state.
+
+ChromaDB is used as a semantic learning repository, not as active workflow state.
+
+---
+
 # Technology Stack
 
 | Component              | Technology    |
@@ -195,6 +216,7 @@ This allows Product Managers to improve weak Features without losing already-app
 | Workflow Engine        | LangGraph     |
 | LLM                    | OpenAI        |
 | Schema Validation      | Pydantic      |
+| Vector Store           | ChromaDB      |
 | Environment Management | Python Dotenv |
 | Language               | Python        |
 
@@ -202,7 +224,6 @@ Planned:
 
 | Component                | Technology     |
 | ------------------------ | -------------- |
-| Vector Database          | ChromaDB       |
 | Documentation Publishing | Confluence API |
 | Observability            | LangSmith      |
 
@@ -235,6 +256,33 @@ planforge/
 ├── requirements.txt
 │
 └── .env.example
+```
+
+Local-only files and folders:
+
+```text
+.env
+chroma_db/
+```
+
+These must not be committed to GitHub.
+
+---
+
+# Environment Configuration
+
+Create a local `.env` file using `.env.example` as the template.
+
+Required variables:
+
+```env
+OPENAI_API_KEY=
+OPENAI_MODEL=gpt-4.1-mini
+OPENAI_TEMPERATURE=0.2
+
+CHROMA_DB_PATH=./chroma_db
+CHROMA_COLLECTION_EPIC_DECOMPOSITIONS=epic_decompositions
+CHROMA_COLLECTION_REJECTED_FEATURE_LESSONS=rejected_feature_lessons
 ```
 
 ---
@@ -308,6 +356,26 @@ Approved Features remain unchanged.
 
 ---
 
+# Organizational Learning
+
+PlanForge stores completed approved Epic-to-Feature decompositions in ChromaDB.
+
+Stored learning artifacts include:
+
+* Original Epic
+* Final approved Feature Set
+* Rejected Feature lessons
+* Human rejection feedback
+* AI evaluation findings
+* Feature version history summary
+* Regeneration history summary
+
+PlanForge retrieves similar approved Epic decomposition patterns before generating Features for a new Epic.
+
+It retrieves rejected Feature lessons during regeneration to avoid repeating prior mistakes.
+
+---
+
 # Sample Epics
 
 PlanForge includes approved Epic-to-Feature decomposition examples under:
@@ -322,21 +390,6 @@ These examples represent Product Manager-approved decompositions and serve as re
 
 # Roadmap
 
-## Milestone 4
-
-Organizational Learning
-
-Capabilities:
-
-* ChromaDB integration
-* Approved Feature storage
-* Rejected Feature storage
-* Rejection feedback storage
-* Similarity-based retrieval
-* Feedback-informed generation
-
----
-
 ## Milestone 5
 
 Confluence Publishing
@@ -346,6 +399,8 @@ Capabilities:
 * Publish approved Features
 * Version tracking
 * Approval audit trail
+* Evaluation summary publishing
+* Learning context summary publishing
 * Confluence integration
 
 ---

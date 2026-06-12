@@ -3,6 +3,12 @@ from pathlib import Path
 
 from src.models.epic import Epic
 from src.models.feature import Feature
+from src.models.learning_artifact import FeatureReviewHistoryEntry
+from src.models.retrieval_context import RetrievalContext
+from src.prompts.retrieval_context import (
+    format_retrieval_context_for_regeneration,
+    format_review_history_for_regeneration,
+)
 
 
 PROMPT_PATH = Path(__file__).resolve().parents[2] / "docs" / "prompts" / "feature-regeneration-prompt.md"
@@ -19,6 +25,8 @@ def build_feature_regeneration_prompt(
     ai_evaluation_findings: list[str],
     human_rejection_feedback: str,
     approved_features: list[Feature],
+    prior_rejection_attempts: list[FeatureReviewHistoryEntry] | None = None,
+    learning_context: RetrievalContext | None = None,
 ) -> str:
     prompt = load_feature_regeneration_prompt()
     approved_feature_context = (
@@ -62,6 +70,16 @@ Human Rejection Feedback
 
 Approved Features To Preserve
 {approved_feature_context}
+
+Current Session Prior Rejection Attempts For This Feature
+{format_review_history_for_regeneration(prior_rejection_attempts or [])}
+
+Retrieved Organizational Learning Context
+
+Use these historical lessons as supporting guidance only.
+Prioritize current human feedback and the current Epic over historical lessons.
+
+{format_retrieval_context_for_regeneration(learning_context)}
 """
 
 
