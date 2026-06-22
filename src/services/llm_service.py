@@ -1,9 +1,9 @@
 import json
-import os
 
 from openai import OpenAI
 from pydantic import ValidationError
 
+from src.config.settings import get_settings
 from src.models.epic import Epic
 from src.models.feature_set import FeatureSet
 from src.models.retrieval_context import RetrievalContext
@@ -12,9 +12,10 @@ from src.prompts.feature_generator import build_feature_generation_prompt
 
 class OpenAIService:
     def __init__(self) -> None:
-        self.api_key = self._required_env("OPENAI_API_KEY")
-        self.model = self._required_env("OPENAI_MODEL")
-        self.temperature = self._required_float_env("OPENAI_TEMPERATURE")
+        settings = get_settings()
+        self.api_key = settings.openai_api_key
+        self.model = settings.openai_model
+        self.temperature = settings.openai_temperature
         self.client = OpenAI(api_key=self.api_key)
 
     def generate_features(
@@ -50,16 +51,3 @@ class OpenAIService:
             return FeatureSet.model_validate(payload)
         except ValidationError as exc:
             raise ValueError("OpenAI response did not match the FeatureSet schema.") from exc
-
-    def _required_env(self, name: str) -> str:
-        value = os.getenv(name)
-        if not value:
-            raise ValueError(f"{name} must be configured in the environment or .env file.")
-        return value
-
-    def _required_float_env(self, name: str) -> float:
-        value = self._required_env(name)
-        try:
-            return float(value)
-        except ValueError as exc:
-            raise ValueError(f"{name} must be a valid number.") from exc

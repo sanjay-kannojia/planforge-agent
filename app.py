@@ -1,16 +1,11 @@
-import os
-
 import streamlit as st
-from dotenv import load_dotenv
 
+from src.config.settings import get_config_value
 from src.graph.workflow import run_regeneration_workflow, run_workflow, store_learning_artifact
 from src.models.epic import Epic
 from src.models.feature_review import FeatureReview
 from src.models.learning_artifact import FeatureReviewHistoryEntry
 from src.models.retrieval_context import RetrievalContext
-
-
-load_dotenv()
 
 
 st.set_page_config(page_title="PlanForge", layout="wide")
@@ -127,12 +122,14 @@ def render_learning_context_summary(
 
 with st.sidebar:
     st.header("Configuration")
-    api_key_available = bool(os.getenv("OPENAI_API_KEY"))
-    model_available = bool(os.getenv("OPENAI_MODEL"))
-    temperature_available = bool(os.getenv("OPENAI_TEMPERATURE"))
+    api_key_available = bool(get_config_value("OPENAI_API_KEY"))
+    openai_model = get_config_value("OPENAI_MODEL")
+    openai_temperature = get_config_value("OPENAI_TEMPERATURE")
+    model_available = bool(openai_model)
+    temperature_available = bool(openai_temperature)
     st.write("OpenAI API key:", "Configured" if api_key_available else "Missing")
-    st.write("OpenAI model:", os.getenv("OPENAI_MODEL") if model_available else "Missing")
-    st.write("Temperature:", os.getenv("OPENAI_TEMPERATURE") if temperature_available else "Missing")
+    st.write("OpenAI model:", openai_model if model_available else "Missing")
+    st.write("Temperature:", openai_temperature if temperature_available else "Missing")
 
 with st.form("epic_form"):
     title = st.text_input("Epic Title", placeholder="AI-Powered Resource Matching")

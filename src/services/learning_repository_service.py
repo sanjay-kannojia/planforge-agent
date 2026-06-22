@@ -1,11 +1,11 @@
 import hashlib
 import json
 import math
-import os
 import re
 from datetime import datetime, timezone
 from uuid import uuid4
 
+from src.config.settings import get_settings
 from src.models.epic import Epic
 from src.models.evaluation_result import EvaluationResult
 from src.models.feature import Feature
@@ -36,18 +36,14 @@ class LearningRepositoryService:
                 "Install dependencies from requirements.txt."
             ) from exc
 
-        db_path = os.getenv("CHROMA_DB_PATH", "./chroma_db")
-        epic_collection_name = os.getenv(
-            "CHROMA_COLLECTION_EPIC_DECOMPOSITIONS",
-            "epic_decompositions",
+        settings = get_settings()
+        self.client = chromadb.PersistentClient(path=settings.chroma_db_path)
+        self.epic_collection = self.client.get_or_create_collection(
+            settings.chroma_epic_decompositions_collection
         )
-        lesson_collection_name = os.getenv(
-            "CHROMA_COLLECTION_REJECTED_FEATURE_LESSONS",
-            "rejected_feature_lessons",
+        self.lesson_collection = self.client.get_or_create_collection(
+            settings.chroma_rejected_feature_lessons_collection
         )
-        self.client = chromadb.PersistentClient(path=db_path)
-        self.epic_collection = self.client.get_or_create_collection(epic_collection_name)
-        self.lesson_collection = self.client.get_or_create_collection(lesson_collection_name)
 
     def retrieve_similar_artifacts(self, epic: Epic, limit: int = 3) -> RetrievalContext:
         results = self.epic_collection.query(
